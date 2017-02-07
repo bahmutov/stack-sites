@@ -22,8 +22,10 @@ function foo () {
   // sites[1] - this file
   // sites[2] - caller to this function
   const caller = sites[2]
-  console.log('I got called from %s line %d column %d',
-    caller.filename, caller.line, caller.column
+  console.log('I got called from %s in %s line %d column %d',
+    caller.functionName,
+    caller.filename,
+    caller.line, caller.column
   )
 }
 module.exports = foo

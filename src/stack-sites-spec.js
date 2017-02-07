@@ -16,6 +16,11 @@ describe('stack-sites', () => {
     la(is.array(sites))
   })
 
+  it('returns at least 2 stacks', () => {
+    const sites = stackSites()
+    la(sites.length > 2, 'sites', sites)
+  })
+
   it('returns library filename', () => {
     const sites = stackSites()
     const thisSite = sites[0]
@@ -46,6 +51,15 @@ describe('stack-sites', () => {
     const sites = stackSites()
     sites.forEach(site => {
       la(is.positive(site.column), 'invalid column number', site)
+    })
+  })
+
+  it('has function names where possible', () => {
+    const sites = stackSites()
+    const firstTwo = sites.slice(0, 2)
+    la(firstTwo.length === 2)
+    sites.forEach(site => {
+      la(is.unemptyString(site.functionName), 'missing function name', site)
     })
   })
 })
