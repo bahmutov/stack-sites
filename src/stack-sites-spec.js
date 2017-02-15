@@ -5,6 +5,23 @@ const is = require('check-more-types')
 const resolve = require('path').resolve
 
 /* global describe, it */
+describe('parsing stack line', () => {
+  const parseStackLine = require('./parse-stack-line')
+  it('is a function', () => {
+    la(is.fn(parseStackLine))
+  })
+
+  it('parses line with more parts', () => {
+    const line = 'at Test.t [as fn] (/foo/sum.test.js:12:3)'
+    const site = parseStackLine(line)
+    la(is.object(site), 'could not parse', line)
+    la(site.filename === '/foo/sum.test.js', 'incorrect filename', site)
+    la(site.line === 12, 'incorrect line', site)
+    la(site.column === 3, 'incorrect column', site)
+    la(site.functionName === 'Test.t', 'incorrect function name', site)
+  })
+})
+
 describe('stack-sites', () => {
   const stackSites = require('.')
   it('is a function', () => {
