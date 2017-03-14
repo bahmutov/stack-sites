@@ -1,5 +1,7 @@
 # stack-sites
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/bahmutov/stack-sites.svg)](https://greenkeeper.io/)
+
 > Returns current stack as call sites
 
 [![NPM][npm-icon] ][npm-url]
