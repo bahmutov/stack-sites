@@ -72,7 +72,7 @@
     "pre-git": "3.14.0",
     "semantic-release": "6.3.6",
     "simple-commit-message": "3.0.2",
-    "standard": "8.6.0"
+    "standard": "9.0.1"
   },
   "dependencies": {
     "check-more-types": "2.23.0",
