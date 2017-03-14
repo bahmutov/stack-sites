@@ -7,12 +7,13 @@ function hasLineInfo (line) {
 }
 
 function isModule (line) {
-  return line.includes('(/')
+  return line.includes('(/') ||
+    line.includes(' (') // on Windows: at stackSites (c:\Users...)
 }
 
-function stackSites () {
-  const e = new Error('stack-sites')
-  return e.stack.split('\n')
+function stackSites (stack) {
+  stack = stack || ((new Error('stack-sites').stack))
+  return stack.split('\n')
     .slice(1) // remove exception itself
     .filter(hasLineInfo)
     .filter(isModule)

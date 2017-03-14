@@ -20,6 +20,13 @@ describe('parsing stack line', () => {
     la(site.column === 3, 'incorrect column', site)
     la(site.functionName === 'Test.t', 'incorrect function name', site)
   })
+
+  it('parses Windows path line', () => {
+    const line = '  at stackSites (c:\\node_modules\\src\\index.js:14:3)'
+    const site = parseStackLine(line)
+    la(site.line === 14, 'invalid line', site)
+    la(site.column === 3, 'invalid column', site)
+  })
 })
 
 describe('stack-sites', () => {
@@ -78,5 +85,31 @@ describe('stack-sites', () => {
     sites.forEach(site => {
       la(is.unemptyString(site.functionName), 'missing function name', site)
     })
+  })
+
+  it('parses Windows stack', () => {
+    const stack = `
+    Error: stack-sites
+      at stackSites (c:\\node_modules\\stack-sites\\src\\index.js:14:13)
+      at snapshot (c:\\node_modules\\snap-shot\\src\\index.js:54:17)
+      at Context.it (c:\\test\\snap-shot.test.js:6:5)
+      at callFn (c:\\node_modules\\mocha\\lib\\runnable.js:345:21)
+      at Test.Runnable.run (c:\\node_modules\\mocha\\lib\\runnable.js:337:7)
+      at Runner.runTest (c:\\node_modules\\mocha\\lib\\runner.js:444:10)
+      at c:\\node_modules\\mocha\\lib\\runner.js:550:12
+      at next (c:\\node_modules\\mocha\\lib\\runner.js:361:14)
+      at c:\\node_modules\\mocha\\lib\\runner.js:371:7
+      at next (c:\\node_modules\\mocha\\lib\\runner.js:295:14)
+      at Immediate.<anonymous> (c:\\node_modules\\mocha\\lib\\runner.js:339:5)
+      at runCallback (timers.js:666:20)
+      at tryOnImmediate (timers.js:639:5)
+      at processImmediate [as _immediateCallback] (timers.js:611:5)
+    `
+    const sites = stackSites(stack)
+    la(is.not.empty(sites), 'expected sites', sites)
+    const first = sites[0]
+    la(first.functionName === 'stackSites', first)
+    la(first.line === 14, first)
+    la(first.column === 13, first)
   })
 })
