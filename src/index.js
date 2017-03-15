@@ -11,11 +11,16 @@ function isModule (line) {
     line.includes(' (') // on Windows: at stackSites (c:\Users...)
 }
 
+function isNative (line) {
+  return line.includes('(native)')
+}
+
 function stackSites (stack) {
   stack = stack || ((new Error('stack-sites').stack))
   return stack.split('\n')
     .slice(1) // remove exception itself
     .filter(hasLineInfo)
+    .filter(line => !isNative(line))
     .filter(isModule)
     .map(parseStackLine)
 }

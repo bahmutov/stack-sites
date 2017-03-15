@@ -112,4 +112,15 @@ describe('stack-sites', () => {
     la(first.line === 14, first)
     la(first.column === 13, first)
   })
+
+  it('skips native lines', () => {
+    const stack = `
+    Error: example
+      at next (native)
+      at foo (bar.js:101:42)
+    `
+    const sites = stackSites(stack)
+    la(sites.length === 1, 'wrong number of sites', sites)
+    la(sites[0].functionName === 'foo', 'wrong function name', sites)
+  })
 })
