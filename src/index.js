@@ -1,5 +1,6 @@
 'use strict'
 
+const debug = require('debug')('stack-sites')
 const parseStackLine = require('./parse-stack-line')
 
 function hasLineInfo (line) {
@@ -17,12 +18,16 @@ function isNative (line) {
 
 function stackSites (stack) {
   stack = stack || ((new Error('stack-sites').stack))
-  return stack.split('\n')
+  debug(stack)
+  const parsed = stack.split('\n')
     .slice(1) // remove exception itself
     .filter(hasLineInfo)
     .filter(line => !isNative(line))
     .filter(isModule)
     .map(parseStackLine)
+  debug('parsed and cleaned up stack')
+  debug(parsed)
+  return parsed
 }
 
 module.exports = stackSites

@@ -41,6 +41,10 @@ has been transpiled on load, see
 blog post. Exception stack on the other hand can take source maps into
 the account, producing correct line and column information.
 
+## Debug
+
+To see the original and parsed stack, run with `DEBUG=stack-sites` environment variable.
+
 ### Small print
 
 Author: Gleb Bahmutov &lt;gleb.bahmutov@gmail.com&gt; &copy; 2017
