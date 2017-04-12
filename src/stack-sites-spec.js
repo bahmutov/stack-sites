@@ -3,6 +3,7 @@
 const la = require('lazy-ass')
 const is = require('check-more-types')
 const resolve = require('path').resolve
+const {find, propEq} = require('ramda')
 
 /* global describe, it */
 describe('parsing stack line', () => {
@@ -85,6 +86,24 @@ describe('stack-sites', () => {
     sites.forEach(site => {
       la(is.unemptyString(site.functionName), 'missing function name', site)
     })
+  })
+
+  it('skips internal process module', () => {
+    const stack = `
+    Error: stack-sites
+      at stackSites (/git/node_modules/stack-sites/src/index.js:20:22)
+      at snapshot (/git/node_modules/subset-shot/src/index.js:36:17)
+      at /git/test/search_entities.js:39:5
+      at next (native)
+      at fulfilled (/git/test/search_entities.js:4:58)
+      at process._tickCallback (internal/process/next_tick.js:103:7)
+    `
+    const sites = stackSites(stack)
+    la(is.not.empty(sites), 'expected sites', sites)
+    const tickCallback = find(
+      propEq('functionName', 'process._tickCallback'))(sites)
+    la(!tickCallback, 'should not have tickCallback site',
+      tickCallback, 'in', sites)
   })
 
   it('parses Windows stack', () => {

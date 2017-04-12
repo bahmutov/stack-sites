@@ -16,6 +16,10 @@ function isNative (line) {
   return line.includes('(native)')
 }
 
+function isInternal (line) {
+  return line.includes('(internal/')
+}
+
 function stackSites (stack) {
   stack = stack || ((new Error('stack-sites').stack))
   debug(stack)
@@ -23,8 +27,10 @@ function stackSites (stack) {
     .slice(1) // remove exception itself
     .filter(hasLineInfo)
     .filter(line => !isNative(line))
+    .filter(line => !isInternal(line))
     .filter(isModule)
     .map(parseStackLine)
+  // maybe limit stack sites to valid existing file?
   debug('parsed and cleaned up stack')
   debug(parsed)
   return parsed
