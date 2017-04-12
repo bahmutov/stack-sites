@@ -106,6 +106,24 @@ describe('stack-sites', () => {
       tickCallback, 'in', sites)
   })
 
+  it('handles generator syntax', () => {
+    const stack = `
+      Error: stack-sites
+        at stackSites (/git/node_modules/stack-sites/src/index.js:24:22)
+        at snapshot (/git/node_modules/subset-shot/src/index.js:37:17)
+        at Test.<anonymous> (/git/test/search_entities.ts:34:3)
+        at Generator.next (<anonymous>)
+        at step (/git/test/search_entities.js:6:191)
+        at /git/test/search_entities.js:6:361
+        at process._tickCallback (internal/process/next_tick.js:109:7)
+    `
+    const sites = stackSites(stack)
+    la(is.not.empty(sites), 'expected sites', sites)
+    const site = find(propEq('filename', '/git/test/search_entities.ts'))(sites)
+    la(site, 'finds TypeScript file', sites)
+    la(site.functionName === 'Test.<anonymous>', 'wrong filename', site, sites)
+  })
+
   it('parses Windows stack', () => {
     const stack = `
     Error: stack-sites
